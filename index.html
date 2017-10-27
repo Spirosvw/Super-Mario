@@ -29,7 +29,7 @@ body {
 		var stompAudio=new Audio('audio/stomp.wav');
 		var bumpAudio=new Audio('audio/bump.wav');
 		var deathAudio=new Audio('audio/mariodie.wav');
-		var coinAudio=new Audio('audio/coin.wav');
+		
 		
 		function preload() {
 
@@ -148,6 +148,7 @@ body {
 		}
 
 		function coinOverlap(player, coin) {
+			var coinAudio=new Audio('audio/coin.wav');
 			coinAudio.play();//paizei to audio coin
 			coin.kill();
 			score=score+1;//auksanei to score kata ena 
