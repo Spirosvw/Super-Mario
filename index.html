@@ -29,11 +29,18 @@ body {
 		var stompAudio=new Audio('audio/stomp.wav');
 		var bumpAudio=new Audio('audio/bump.wav');
 		var deathAudio=new Audio('audio/mariodie.wav');
-		
+		var ghostAudio=new Audio('audio/ghostsound.mp3');
+		var cursed=0;
 		
 		function preload() {
 			//  We need this because the assets are on github pages
 			//  Remove the next 2 lines if running locally
+			
+			this.load.image('button','assets/button.png');//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			this.load.image('button1','assets/level1.png');
+			this.load.image('button2','assets/level2.png');
+			this.load.spritesheet('zombie','assets/zombie.png',15,20);//paradoteo3o
+			this.load.spritesheet('ghost','assets/boo.png',15,20);
 			
 			this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16,
 					16);
@@ -44,6 +51,14 @@ body {
 					Phaser.Tilemap.TILED_JSON);
 		}
 		function create() {
+			
+			this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+			button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
+			game.world.bringToTop('button');//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			button1 = game.add.button(game.world.centerX-50 , game.world.centerY-50, 'button1', level1, this, 2, 1, 0);//paradoteo3o
+			game.world.bringToTop('button1');//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			button2 = game.add.button(game.world.centerX-50 , game.world.centerY-10, 'button2', level1, this, 2, 1, 0);//paradoteo3o
+			game.world.bringToTop('button1');//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			
 			themesong.play();//ekkinhsh themesong
 		    hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
@@ -76,6 +91,16 @@ body {
 			goombas.setAll('body.bounce.x', 1);
 			goombas.setAll('body.velocity.x', -20);
 			goombas.setAll('body.gravity.y', 500);
+			
+			zombies= game.add.group();//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			zombies.enableBody= true;
+			map.createFromTiles(3,null,'zombie','stuff',zombies);
+			zombies.callAll('animations.add','animations','walk',[0 , 1, 2], 3, true );
+			zombies.callAll('animations.play','animations','walk');
+			zombies.setAll('body.bounce.x',1);
+			zombies.setAll('body.velocity.x',-50);
+			zombies.setAll('body.gravity.y',500);
+			
 			player = game.add.sprite(16, game.world.height - 48, 'mario');
 			game.physics.arcade.enable(player);
 			player.body.gravity.y = 370;
@@ -85,19 +110,50 @@ body {
 			player.goesRight = true;
 			game.camera.follow(player);
 			cursors = game.input.keyboard.createCursorKeys();
+			
+			ghosts=game.add.group();//paradoteo3o!!!!!!!!!!!!!!!!!!!!
+			ghosts.enableBody=true;
+			ghosts.setAll('body.bounce.x',1);
+			ghosts.setAll('body.velocity.x',-50);
+			map.createFromTiles(9,null,'ghost','stuff',ghosts);
+			
+			game.paused = true;//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		}
 		function update() {
+			
+			if (this.spaceKey.isDown){
+				player.reset(16,139);
+			}
+			
+			ghosts.forEach(move);
+			scoreText.fixedToCamera=true;
+			scoreText.cameraOffset.setTo(0,0);
+			
 			
 			scoreText.x=player.x-40;//metakinhsh tou score mazi me ton mario
 			hpText.x=player.x;//metakinhsh tou hp mazi me ton mario
 			hpText.y=player.y-20;//emfanish tou hp panw apo ton mario
 			hpText.text='Health='+ hp;//emfanish tou hp text
 			
+			if (player.y>=game.world.height){
+				deathAudio.play();//paizei to mariodie
+					themesong.pause();//stamataei to themesong
+					player.frame = 4;
+					player.body.enable = false;
+					player.animations.stop();
+					game.paused = true;
+			}
+			
 			game.physics.arcade.checkCollision.down = false;
 			game.physics.arcade.collide(player, layer);
 			game.physics.arcade.collide(goombas, layer);
 			game.physics.arcade.overlap(player, goombas, goombaOverlap);
 			game.physics.arcade.overlap(player, coins, coinOverlap);
+			
+			game.physics.arcade.collide(zombies,layer);//paradoteo3o
+			game.physics.arcade.overlap(player,zombies,zombieOverlap);
+			
+			game.physics.arcade.overlap(player,ghosts,ghostOverlap);
 			if (player.body.enable) {
 				player.body.velocity.x = 0;
 				if (cursors.left.isDown) {
@@ -129,7 +185,176 @@ body {
 						player.frame = 1;
 				}
 			}
+			
+			if (player.x>=3066){//paradoteo3o
+				cursors = this.game.input.keyboard.disable = true; 
+				game.time.events.add(Phaser.Timer.SECOND*4, function() {
+					player.frame=5;
+				});
+				game.time.events.add(Phaser.Timer.SECOND*4, function() {
+					player.frame=0;
+				});
+				game.time.events.add(Phaser.Timer.SECOND*4, function() {
+					player.frame=4;
+					game.paused=true;
+				});
+				
+			}
+			
+			if (cursed==0){
+				if (player.body.enable) {
+					player.body.velocity.x = 0;
+					if (cursors.left.isDown) {
+						player.body.velocity.x = -90;
+						player.animations.play('walkLeft');
+						player.goesRight = false;
+					} else if (cursors.right.isDown) {
+						player.body.velocity.x = 90;
+						player.animations.play('walkRight');
+						player.goesRight = true;
+					} else {
+						player.animations.stop();
+						if (player.goesRight)
+							player.frame = 5;
+						else
+							player.frame = 0;
+					}
+					
+					
+					if (cursors.up.isDown && player.body.onFloor()) {
+						player.body.velocity.y = -190;
+						jumpAudio.play();//paizei to jump
+						player.animations.stop();
+					}
+					if (player.body.velocity.y != 0) {
+						if (player.goesRight)
+							player.frame = 6;
+						else
+							player.frame = 1;
+					}
+				}
+			}
+			else{
+				if (player.body.enable) {
+					player.body.velocity.x = 0;
+					if (cursors.right.isDown) {
+						player.body.velocity.x = -90;
+						player.animations.play('walkLeft');
+						player.goesRight = false;
+					} else if (cursors.left.isDown) {
+						player.body.velocity.x = 90;
+						player.animations.play('walkRight');
+						player.goesRight = true;
+					} else {
+						player.animations.stop();
+						if (player.goesRight)
+							player.frame = 5;
+						else
+							player.frame = 0;
+					}
+					
+					
+					if (cursors.down.isDown && player.body.onFloor()) {
+						player.body.velocity.y = -190;
+						jumpAudio.play();//paizei to jump
+						player.animations.stop();
+					}
+					if (player.body.velocity.y != 0) {
+						if (player.goesRight)
+							player.frame = 6;
+						else
+							player.frame = 1;
+					}
+				}	
+			}
 		}
+		
+		function move(ghost){//paradoteo3o
+			if (ghost.x-player.x<=100){
+				game.physics.arcade.moveToObject(ghost,player,1000,10000);
+			}
+		}
+		
+		function actionOnClick(){//paradoteo3o
+			game.paused=false;
+			button.destroy();
+			button1.destroy();
+			button2.destroy();
+		}
+		
+		function killer(c){
+			c.kill();
+		}
+		
+		function reset(){
+			coins.forEach(killer(coin));
+			gumbas.forEach(killer(gumba));
+			zombies.forEach(killer(zombie));
+			ghosts.forEach(killer(ghost));
+			player.kill();
+			map.destroy();
+			layer.destroy();
+		}
+		
+		function level1(){
+			reset();
+			game.stage.backgroundColor = '#5c94fc';
+			map = game.add.tilemap('level');
+			map.addTilesetImage('super_mario_tiles', 'super_mario_tiles');
+			map.setCollisionBetween(3, 12, true, 'solid');
+			map.createLayer('background');
+			layer = map.createLayer('solid');
+			layer.resizeWorld();
+			coins = game.add.group();
+			coins.enableBody = true;
+			map.createFromTiles(2, null, 'coin', 'stuff', coins);
+			coins.callAll('animations.add', 'animations', 'spin',
+					[0, 0, 1, 2, 3, 4 ], 15, true);
+			coins.callAll('animations.play', 'animations', 'spin');
+			zombies= game.add.group();//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			zombies.enableBody= true;
+			map.createFromTiles(3,null,'zombie','stuff',zombies);
+			zombies.callAll('animations.add','animations','walk',[0 , 1, 2], 3, true );
+			zombies.callAll('animations.play','animations','walk');
+			zombies.setAll('body.bounce.x',2);
+			zombies.setAll('body.velocity.x',-50);
+			zombies.setAll('body.gravity.y',500);
+			
+			
+			
+			
+			//pipes=game.add.group();
+			//map.createFromTiles(7,null,'super_mario_tiles','solid',pipes);
+			
+			goombas = game.add.group();
+			goombas.enableBody = true;	
+			map.createFromTiles(1, null, 'goomba', 'stuff', goombas);
+			goombas.callAll('animations.add', 'animations', 'walk', [ 0, 1 ],
+					2, true);
+			goombas.callAll('animations.play', 'animations', 'walk');
+			goombas.setAll('body.bounce.x', 1);
+			goombas.setAll('body.velocity.x', -20);
+			goombas.setAll('body.gravity.y', 500);
+			player = game.add.sprite(16, game.world.height - 60, 'mario');
+			game.physics.arcade.enable(player);
+			player.body.gravity.y = 370;
+			player.body.collideWorldBounds = true;
+			player.animations.add('walkRight', [ 5, 6, 7, 8 ], 10, true);
+			player.animations.add('walkLeft', [ 0, 1, 2, 3 ], 10, true);
+			player.goesRight = true;
+			game.camera.follow(player);
+			cursors = game.input.keyboard.createCursorKeys();
+			
+			
+			ghosts=game.add.group();//paradoteo3o!!!!!!!!!!!!!!!!!!!!
+			ghosts.enableBody=true;
+			ghosts.setAll('body.bounce.x',-1);
+			ghosts.setAll('body.velocity.x',-50);
+			map.createFromTiles(9,null,'ghost','stuff',ghosts);
+			
+		
+		}
+		
 		function coinOverlap(player, coin) {
 			var coinAudio=new Audio('audio/coin.wav');
 			coinAudio.play();//paizei to audio coin
@@ -176,6 +401,77 @@ body {
 				}
 			}
 		}
+		
+		function ghostOverlap(player,ghost){
+			if (player.body.touching.down) {
+				stompAudio.play();//paizei to audio stomp
+				score=score+20;//auksanei to score kata 20 
+				healthScore=healthScore+20;
+				scoreText.text = 'Score: ' + score;//emfanizei to ananeomeno score
+				if (healthScore>=100){//bonus
+					healthScore=healthScore-100;
+					hp=hp+1;
+					hpText.text='Health='+ hp;
+				}
+				ghost.animations.stop();
+				ghost.body.enable = false;
+				player.body.velocity.y = -80;
+				game.time.events.add(Phaser.Timer.SECOND, function() {
+					ghost.kill();
+				});
+			} else {
+				ghostAudio.play();//paizei to bump 
+				player.x=player.x-5;//otan o mario aggizei ena goomba paei pisw 15 pixel
+				game.stage.backgroundColor = '#22914f';
+				cursed=1;
+				game.time.events.add(Phaser.Timer.SECOND*4, function() {
+					cursed=0;
+					game.stage.backgroundColor = '#5c94fc';
+				});
+				ghost.kill();//otan o zombie akoumpaei ton mario paei pisw 15 pixel
+			    
+			}
+		}
+		
+		
+		function zombieOverlap(player,zombie){//paradoteo3o
+			if (player.body.touching.down) {
+				stompAudio.play();//paizei to audio stomp
+				score=score+20;//auksanei to score kata 20 
+				healthScore=healthScore+20;
+				scoreText.text = 'Score: ' + score;//emfanizei to ananeomeno score
+				if (healthScore>=100){//bonus
+					healthScore=healthScore-100;
+					hp=hp+1;
+					hpText.text='Health='+ hp;
+				}
+				zombie.animations.stop();
+				zombie.frame = 4;
+				zombie.body.enable = false;
+				player.body.velocity.y = -80;
+				game.time.events.add(Phaser.Timer.SECOND, function() {
+					zombie.kill();
+				});
+			} else {
+				bumpAudio.play();//paizei to bump 
+				player.x=player.x-15;//otan o mario aggizei ena goomba paei pisw 15 pixel
+				zombie.x=zombie.x+15;//otan o zombie akoumpaei ton mario paei pisw 15 pixel
+			    	hp=hp-2;//meiwnetai h zwh tou mario kata ena otan aggizei ena goomba
+				hpText.text='Health='+ hp;//emfanizetai to ananeomeno text tou hp
+				
+				if (hp<=0){//otan ftasei to hp sto 0 tote teleiwnei to paixnidi
+					deathAudio.play();//paizei to mariodie
+					themesong.pause();//stamataei to themesong
+					player.frame = 4;
+					player.body.enable = false;
+					player.animations.stop();
+					game.time.events.add(Phaser.Timer.SECOND * 3, function() {
+						game.paused = true;
+					});
+				}
+			}
+		}
+		
 	</script>
 </body>
 </html>
