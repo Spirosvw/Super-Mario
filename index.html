@@ -67,6 +67,9 @@ body {
 			game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 			game.physics.startSystem(Phaser.Physics.ARCADE);
 			
+			button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
+			
+			
 			button1 = game.add.button(game.world.centerX-50 , game.world.centerY-50, 'button1', level1, this, 2, 1, 0);//paradoteo3o
 			
 			button2 = game.add.button(game.world.centerX-50 , game.world.centerY-10, 'button2', level1, this, 2, 1, 0);//paradoteo3o
@@ -223,7 +226,6 @@ body {
 			if (clicks>=1){
 				reset();
 			}
-			button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
 			clicks=clicks+1
 			themesong.play();//ekkinhsh themesong
 		    hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
