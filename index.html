@@ -320,9 +320,15 @@ body {
 				});
 			} else {
 				bumpAudio.play();//paizei to bump 
-				player.x=player.x-15;//otan o mario aggizei ena goomba paei pisw 15 pixel
-				zombie.x=zombie.x+15;//otan o zombie akoumpaei ton mario paei pisw 15 pixel
-			    	hp=hp-2;//meiwnetai h zwh tou mario kata ena otan aggizei ena goomba
+				if(player.goesRight==true){
+					player.x=player.x-15;//otan o mario aggizei ena goomba paei pisw 15 pixel
+					zombie.x=zombie.x+15;//otan o zombie akoumpaei ton mario paei pisw 15 pixel
+				}
+				else{
+					player.x=player.x+15;
+					zombie.x=zombie.x-15;
+				}
+				hp=hp-2;//meiwnetai h zwh tou mario kata ena otan aggizei ena goomba
 				hpText.text='Health='+ hp;//emfanizetai to ananeomeno text tou hp
 				
 				if (hp<=0){//otan ftasei to hp sto 0 tote teleiwnei to paixnidi
@@ -358,7 +364,6 @@ body {
 				});
 			} else {
 				ghostAudio.play();//paizei to bump 
-				player.x=player.x-5;//otan o mario aggizei ena goomba paei pisw 15 pixel
 				game.stage.backgroundColor = '#22914f';
 				cursed=1;
 				game.time.events.add(Phaser.Timer.SECOND*4, function() {
@@ -391,8 +396,14 @@ body {
 				});
 			} else {
 				bumpAudio.play();//paizei to bump 
-				player.x=player.x-15;//otan o mario aggizei ena goomba paei pisw 15 pixel
-				goomba.x=goomba.x+15;//otan o goomba akoumpaei ton mario paei pisw 15 pixel
+				if(player.goesRight==true){
+					player.x=player.x-15;//otan o mario aggizei ena goomba paei pisw 15 pixel
+					goomba.x=goomba.x+15;//otan o zombie akoumpaei ton mario paei pisw 15 pixel
+				}
+				else{
+					player.x=player.x+15;
+					goomba.x=goomba.x-15;
+				}
 			    	hp=hp-1;//meiwnetai h zwh tou mario kata ena otan aggizei ena goomba
 				hpText.text='Health='+ hp;//emfanizetai to ananeomeno text tou hp
 				
