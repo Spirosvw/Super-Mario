@@ -57,7 +57,7 @@ body {
 					Phaser.Tilemap.TILED_JSON);
 		}
 		function create() {
-			
+			game.paused=true;
 		 	this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 			image=game.add.image(game.world.centerX+50,game.world.centerY-90,'menu');			
 			game.stage.backgroundColor = '#5c94fc';
@@ -225,7 +225,7 @@ body {
 		}
 		
 		function level1(){
-			game.paused=true;
+			
 			if (clicks>=1){
 				reset();
 			}
