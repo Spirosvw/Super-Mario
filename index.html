@@ -58,23 +58,19 @@ body {
 		}
 		function create() {
 			
+		 	this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+			image=game.add.image(game.world.centerX+50,game.world.centerY-90,'menu');			
+			game.stage.backgroundColor = '#5c94fc';
 			Phaser.Canvas.setImageRenderingCrisp(game.canvas)
 			game.scale.pageAlignHorizontally = true;
 			game.scale.pageAlignVertically = true
 			game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 			game.physics.startSystem(Phaser.Physics.ARCADE);
-		
-			this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-			image=game.add.image(game.world.centerX+50,game.world.centerY-90,'menu');
-			
 			
 			button1 = game.add.button(game.world.centerX-50 , game.world.centerY-50, 'button1', level1, this, 2, 1, 0);//paradoteo3o
 			
 			button2 = game.add.button(game.world.centerX-50 , game.world.centerY-10, 'button2', level1, this, 2, 1, 0);//paradoteo3o
 					
-			
-			game.stage.backgroundColor = '#5c94fc';
-			
 			//game.paused=true;
 		}
 		function update() {
@@ -126,7 +122,7 @@ body {
 				
 			}
 			
-						game.physics.arcade.overlap(player, goombas, goombaOverlap);
+			game.physics.arcade.overlap(player, goombas, goombaOverlap);
 			game.physics.arcade.overlap(player, coins, coinOverlap);
 			if (cursed==0){
 				if (player.body.enable) {
@@ -215,7 +211,7 @@ body {
 		
 		function reset(){
 			coins.forEach(killer(coin));
-			gumbas.forEach(killer(gumba));
+			goombas.forEach(killer(goomba));
 			zombies.forEach(killer(zombie));
 			ghosts.forEach(killer(ghost));
 			player.kill();
