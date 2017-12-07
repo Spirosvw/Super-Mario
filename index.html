@@ -110,7 +110,7 @@ body {
 				game.physics.arcade.overlap(player,ghosts,ghostOverlap);
 				
 				if (player.x>=3066){//paradoteo3o
-					cursors = this.game.input.keyboard.disable = true; 
+					this.game.physics.arcade.isPaused=true;
 					game.time.events.add(Phaser.Timer.SECOND*4, function() {
 						player.frame=5;
 					});
