@@ -34,13 +34,14 @@ body {
 		var cursed=0;
 		var image;
 		var clicks=0;
+		var lvl=0;
 		
 		function preload() {
 			//  We need this because the assets are on github pages
 			//  Remove the next 2 lines if running locally
 			this.load.baseURL = 'https://Spirosvw.github.io/Super-Mario/';
 			this.load.crossOrigin = 'anonymous';
-			
+			this.load.image('youWin','assets/youwon.png');
 			this.load.image('button','assets/button.png');//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			this.load.image('button1','assets/level1.png');
 			this.load.image('button2','assets/level2.png');
@@ -110,18 +111,19 @@ body {
 				game.physics.arcade.overlap(player,ghosts,ghostOverlap);
 				
 				if (player.x>=3066){//paradoteo3o
-					this.game.physics.arcade.isPaused=true;
-					game.time.events.add(Phaser.Timer.SECOND*4, function() {
-						player.frame=5;
-					});
-					game.time.events.add(Phaser.Timer.SECOND*4, function() {
-						player.frame=0;
-					});
-					game.time.events.add(Phaser.Timer.SECOND*4, function() {
-						player.frame=4;
-						game.paused=true;
-					});
-					
+					player.body.enable = false;
+					player.frame=4;
+					if (lvl==1){
+						reset();
+						level2();
+					}
+					else{
+						var s = game.add.image(player.x-200,player.y-180, 'youWin');
+						themesong.pause();//stamataei to themesong
+						game.time.events.add(Phaser.Timer.SECOND, function() {
+							game.paused=true;
+						});
+					}
 				}
 				
 				//game.physics.arcade.collide(player,pipes,teleport)//teleport
@@ -205,39 +207,39 @@ body {
 		}
 		
 		function actionOnClick(){//paradoteo3o
-			this.game.physics.arcade.isPaused= false;
-			button.destroy();
+			game.paused=false;
+			button.kill();
 			button1.destroy();
 			button2.destroy();
 			image.destroy();
 		}
 		
-		function killer(c){
-			c.kill();
-		}
 		
 		function reset(){
-			coins.forEach(killer(coin));
-			goombas.forEach(killer(goomba));
-			zombies.forEach(killer(zombie));
-			ghosts.forEach(killer(ghost));
+			coins.kill();
+			goombas.kill();
+			zombies.kill();
+			ghosts.kill();
 			player.kill();
 			map.destroy();
 			layer.destroy();
+			scoreText.kill();
+			hpText.kill();
 		}
 		
 		function level1(){
-			this.game.physics.arcade.isPaused=true;
 			if (clicks>=1){
 				reset();
 			}
-			button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
-			
+			game.paused=true;
+			if(clicks==0){
+				button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
+			}
 			clicks=clicks+1
 			themesong.play();//ekkinhsh themesong
 		    hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
 			scoreText = game.add.text(0, 0, 'score: 0', { fontSize: '16px', fill: '#ffffff' });//Score text
-			
+			lvl=1;
 			
 			game.stage.backgroundColor = '#5c94fc';
 			map = game.add.tilemap('level');
@@ -262,10 +264,69 @@ body {
 			zombies.setAll('body.gravity.y',500);
 			
 			
+			goombas = game.add.group();
+			goombas.enableBody = true;	
+			map.createFromTiles(1, null, 'goomba', 'stuff', goombas);
+			goombas.callAll('animations.add', 'animations', 'walk', [ 0, 1 ],
+					2, true);
+			goombas.callAll('animations.play', 'animations', 'walk');
+			goombas.setAll('body.bounce.x', 1);
+			goombas.setAll('body.velocity.x', -20);
+			goombas.setAll('body.gravity.y', 500);
+			player = game.add.sprite(16, game.world.height - 60, 'mario');
+			game.physics.arcade.enable(player);
+			player.body.gravity.y = 370;
+			player.body.collideWorldBounds = true;
+			player.animations.add('walkRight', [ 5, 6, 7, 8 ], 10, true);
+			player.animations.add('walkLeft', [ 0, 1, 2, 3 ], 10, true);
+			player.goesRight = true;
+			game.camera.follow(player);
+			cursors = game.input.keyboard.createCursorKeys();
 			
 			
-			//pipes=game.add.group();
-			//map.createFromTiles(7,null,'super_mario_tiles','solid',pipes);
+			ghosts=game.add.group();//paradoteo3o!!!!!!!!!!!!!!!!!!!!
+			ghosts.enableBody=true;
+			ghosts.setAll('body.bounce.x',-1);
+			ghosts.setAll('body.velocity.x',-50);
+			map.createFromTiles(9,null,'ghost','stuff',ghosts);
+			
+		
+		}
+		function level2(){
+			if (clicks>=1){
+				reset();
+			}
+			if(clicks==0){
+				game.paused=true;
+				button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
+			}
+			clicks=clicks+1
+			themesong.play();//ekkinhsh themesong
+		    hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
+			scoreText = game.add.text(0, 0, 'score: 0', { fontSize: '16px', fill: '#ffffff' });//Score text
+			lvl=2;
+			
+			game.stage.backgroundColor = '#5c94fc';
+			map = game.add.tilemap('level2');
+			map.addTilesetImage('super_mario_tiles', 'super_mario_tiles');
+			map.setCollisionBetween(3, 12, true, 'solid');
+			map.createLayer('background');
+			layer = map.createLayer('solid');
+			layer.resizeWorld();
+			coins = game.add.group();
+			coins.enableBody = true;
+			map.createFromTiles(2, null, 'coin', 'stuff', coins);
+			coins.callAll('animations.add', 'animations', 'spin',
+					[0, 0, 1, 2, 3, 4 ], 15, true);
+			coins.callAll('animations.play', 'animations', 'spin');
+			zombies= game.add.group();//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			zombies.enableBody= true;
+			map.createFromTiles(3,null,'zombie','stuff',zombies);
+			zombies.callAll('animations.add','animations','walk',[0 , 1, 2], 3, true );
+			zombies.callAll('animations.play','animations','walk');
+			zombies.setAll('body.bounce.x',1);
+			zombies.setAll('body.velocity.x',-50);
+			zombies.setAll('body.gravity.y',500);
 			
 			goombas = game.add.group();
 			goombas.enableBody = true;	
