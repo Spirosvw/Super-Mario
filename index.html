@@ -207,7 +207,7 @@ body {
 				game.physics.arcade.moveToObject(ghost,player,1000,10000);
 			}
 		}
-		
+		game.input.onDown.add(actionOnClick, self);
 		function actionOnClick(){//paradoteo3o
 			game.paused=false;
 			button.kill();
@@ -230,7 +230,7 @@ body {
 		}
 		
 		function level1(){
-			this.game.paused=true;
+			game.paused=true;
 			if (clicks>=1){
 				reset();
 			}
