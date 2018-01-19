@@ -207,39 +207,12 @@ body {
 				game.physics.arcade.moveToObject(ghost,player,1000,10000);
 			}
 		}
-
-		function actionOnClick(){//paradoteo3o
-			game.paused=false;
-			button.kill();
-			button1.destroy();
-			button2.destroy();
-			image.destroy();
-		}
 		
 		
-		function reset(){
-			coins.kill();
-			goombas.kill();
-			zombies.kill();
-			ghosts.kill();
-			player.kill();
-			map.destroy();
-			layer.destroy();
-			scoreText.kill();
-			hpText.kill();
-		}
+		
 		
 		function level1(){
-			game.time.events.add(Phaser.Timer.SECOND * 3, function() {
-				game.paused = true;
-			});
-			if (clicks>=1){
-				reset();
-			}
-			if(clicks==0){
-				button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
-			}
-			clicks=clicks+1
+			image.destroy()
 			themesong.play();//ekkinhsh themesong
 		        hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
 			scoreText = game.add.text(0, 0, 'score: 0', { fontSize: '16px', fill: '#ffffff' });//Score text
@@ -297,16 +270,7 @@ body {
 		
 		}
 		function level2(){
-			game.time.events.add(Phaser.Timer.SECOND * 3, function() {
-				game.paused = true;
-			});
-			if (clicks>=1){
-				reset();
-			}
-			if(clicks==0){
-				button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
-			}
-			clicks=clicks+1
+			image.destroy()
 			themesong.play();//ekkinhsh themesong
 		       hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
 			scoreText = game.add.text(0, 0, 'score: 0', { fontSize: '16px', fill: '#ffffff' });//Score text
