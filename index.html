@@ -208,7 +208,13 @@ body {
 			}
 		}
 
-		
+		function actionOnClick(){//paradoteo3o
+			game.paused=false;
+			button.kill();
+			button1.destroy();
+			button2.destroy();
+			image.destroy();
+		}
 		
 		
 		function reset(){
@@ -355,13 +361,7 @@ body {
 		
 		}
 		
-		function actionOnClick(){//paradoteo3o
-			game.paused=false;
-			button.kill();
-			button1.destroy();
-			button2.destroy();
-			image.destroy();
-		}
+		
 		
 		function coinOverlap(player, coin) {
 			var coinAudio=new Audio('audio/coin.wav');
