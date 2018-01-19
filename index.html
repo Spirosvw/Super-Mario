@@ -209,12 +209,25 @@ body {
 		}
 		
 		
-		
+		function reset(){
+			coins.kill();
+			goombas.kill();
+			zombies.kill();
+			ghosts.kill();
+			player.kill();
+			map.destroy();
+			layer.destroy();
+			scoreText.kill();
+			hpText.kill();
+			themesong.kill();
+		}
 		
 		function level1(){
-			image.destroy();
-			button1.destroy();
-			button2.destroy();
+			if (game.paused==false){
+				image.destroy();
+				button1.destroy();
+				button2.destroy();
+			}
 			themesong.play();//ekkinhsh themesong
 		        hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
 			scoreText = game.add.text(0, 0, 'score: 0', { fontSize: '16px', fill: '#ffffff' });//Score text
@@ -272,9 +285,11 @@ body {
 		
 		}
 		function level2(){
-			image.destroy();
-			button1.destroy();
-			button2.destroy();
+			if (game.paused==false){
+				image.destroy();
+				button1.destroy();
+				button2.destroy();
+			}
 			themesong.play();//ekkinhsh themesong
 		       hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
 			scoreText = game.add.text(0, 0, 'score: 0', { fontSize: '16px', fill: '#ffffff' });//Score text
@@ -385,6 +400,16 @@ body {
 					player.animations.stop();
 					game.time.events.add(Phaser.Timer.SECOND * 3, function() {
 						game.paused = true;
+						if (lvl==1){
+							reset();
+							level1();
+							game.paused=false;
+						}
+						else{
+							reset();
+							level2();
+							game.paused=false;
+						}
 					});
 				}
 			}
@@ -461,6 +486,16 @@ body {
 					player.animations.stop();
 					game.time.events.add(Phaser.Timer.SECOND * 3, function() {
 						game.paused = true;
+						if (lvl==1){
+							reset();
+							level1();
+							game.paused=false;
+						}
+						else{
+							reset();
+							level2();
+							game.paused=false;
+						}
 					});
 				}
 			}
