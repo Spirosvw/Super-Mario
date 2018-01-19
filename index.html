@@ -215,7 +215,7 @@ body {
 			layer.destroy();
 			scoreText.kill();
 			hpText.kill();
-			themesong.kill();
+			themesong.destroy();
 		}
 		
 		function level1(){
@@ -400,11 +400,13 @@ body {
 							reset();
 							level1();
 							game.paused=false;
+							themesong.restart;
 						}
 						else{
 							reset();
 							level2();
 							game.paused=false;
+							themesong.restart;
 						}
 					});
 				}
