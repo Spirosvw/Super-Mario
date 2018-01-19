@@ -76,7 +76,7 @@ body {
 			button1 = game.add.button(game.world.centerX-50 , game.world.centerY-50, 'button1', level1, this, 2, 1, 0);//paradoteo3o
 			
 			button2 = game.add.button(game.world.centerX-50 , game.world.centerY-10, 'button2', level2, this, 2, 1, 0);//paradoteo3o
-			game.input.onDown.add(actionOnClick, self);		
+			
 			
 		}
 		function update() {
@@ -210,6 +210,7 @@ body {
 
 		function actionOnClick(){//paradoteo3o
 			game.paused=false;
+			button.kill();
 			button1.destroy();
 			button2.destroy();
 			image.destroy();
@@ -229,11 +230,15 @@ body {
 		}
 		
 		function level1(){
-			game.paused=true;
+			game.time.events.add(Phaser.Timer.SECOND * 3, function() {
+				game.paused = true;
+			});
 			if (clicks>=1){
 				reset();
 			}
-			choiseLabel = game.add.text(w/2, h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#fff' });
+			if(clicks==0){
+				button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
+			}
 			clicks=clicks+1
 			themesong.play();//ekkinhsh themesong
 		        hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
@@ -292,11 +297,15 @@ body {
 		
 		}
 		function level2(){
-			this.game.paused=true;
+			game.time.events.add(Phaser.Timer.SECOND * 3, function() {
+				game.paused = true;
+			});
 			if (clicks>=1){
 				reset();
 			}
-			choiseLabel = game.add.text(w/2, h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#fff' });
+			if(clicks==0){
+				button = game.add.button(game.world.centerX-50 , game.world.centerY-90, 'button', actionOnClick, this, 2, 1, 0);//paradoteo3o
+			}
 			clicks=clicks+1
 			themesong.play();//ekkinhsh themesong
 		       hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
