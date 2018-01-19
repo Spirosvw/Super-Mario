@@ -76,14 +76,14 @@ body {
 			button1 = game.add.button(game.world.centerX-50 , game.world.centerY-50, 'button1', level1, this, 2, 1, 0);//paradoteo3o
 			
 			button2 = game.add.button(game.world.centerX-50 , game.world.centerY-10, 'button2', level2, this, 2, 1, 0);//paradoteo3o
-					
+			game.input.onDown.add(actionOnClick, self);		
 			
 		}
 		function update() {
 			if (this.spaceKey.isDown){
 				player.reset(16,139);
 			}
-			game.input.onDown.add(actionOnClick, self);
+			
 			game.world.bringToTop('button');//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			game.world.bringToTop('button1');//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			game.world.bringToTop('button2');//paradoteo3o!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
