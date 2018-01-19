@@ -210,7 +210,6 @@ body {
 
 		function actionOnClick(){//paradoteo3o
 			game.paused=false;
-			button.kill();
 			button1.destroy();
 			button2.destroy();
 			image.destroy();
@@ -234,7 +233,7 @@ body {
 			if (clicks>=1){
 				reset();
 			}
-			
+			choiseLabel = game.add.text(w/2, h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#fff' });
 			clicks=clicks+1
 			themesong.play();//ekkinhsh themesong
 		        hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
@@ -297,6 +296,7 @@ body {
 			if (clicks>=1){
 				reset();
 			}
+			choiseLabel = game.add.text(w/2, h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#fff' });
 			clicks=clicks+1
 			themesong.play();//ekkinhsh themesong
 		       hpText=game.add.text(0,0,'hp: 0',{fontSize: '10px',fill:'#ffffff'});//hp Text
