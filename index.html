@@ -209,10 +209,7 @@ body {
 		
 		
 		function reset(){
-			coins.kill();
-			goombas.kill();
-			zombies.kill();
-			ghosts.kill();
+			game.world.removeAll()
 			player.kill();
 			map.destroy();
 			layer.destroy();
